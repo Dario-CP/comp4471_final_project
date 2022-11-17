@@ -107,6 +107,9 @@ class DatasetSequence(tf.keras.utils.Sequence):
         # Extract the V channel
         v_channels = hsv_images[:, :, :, 2]
 
+        # Reshape the V channel to have the same shape as the input image
+        v_channels = tf.reshape(v_channels, (v_channels.shape[0], v_channels.shape[1], v_channels.shape[2], 1))
+
         # Return a tuple of (input, output) to feed the network
         return v_channels, hsv_images
 
