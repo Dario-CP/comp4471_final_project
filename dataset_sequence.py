@@ -36,7 +36,7 @@ class DatasetSequence(tf.keras.utils.Sequence):
             for i in os.listdir(self.train_path):
                 if self.train_samples is not None and len(self.train) > self.train_samples:
                     break
-                self.train.append(os.path.join(self.test_path, i))
+                self.train.append(os.path.join(self.train_path, i))
 
         elif self.split == 'test':
             for i in os.listdir(self.test_path):
@@ -63,7 +63,6 @@ class DatasetSequence(tf.keras.utils.Sequence):
                 random.shuffle(self.val)
 
 
-
     def __len__(self):
         if self.split == 'train':
             return len(self.train) // self.batch_size
@@ -76,13 +75,13 @@ class DatasetSequence(tf.keras.utils.Sequence):
     def __getitem__(self, idx):
         if self.split == 'train':
             batch = self.train[idx * self.batch_size:(idx + 1) * self.batch_size]
-            return self.preprocessing(np.array([self.__load_image(os.path.join(self.train_path, file)) for file in batch]))
+            return self.preprocessing(np.array([self.__load_image(file) for file in batch]))
         elif self.split == 'test':
             batch = self.test[idx * self.batch_size:(idx + 1) * self.batch_size]
-            return self.preprocessing(np.array([self.__load_image(os.path.join(self.test_path, file)) for file in batch]))
+            return self.preprocessing(np.array([self.__load_image(file) for file in batch]))
         elif self.split == 'val':
             batch = self.val[idx * self.batch_size:(idx + 1) * self.batch_size]
-            return self.preprocessing(np.array([self.__load_image(os.path.join(self.val_path, file)) for file in batch]))
+            return self.preprocessing(np.array([self.__load_image(file) for file in batch]))
 
         else:
             raise ValueError("The split must be \'train\', \'test\' or \'val\'")
